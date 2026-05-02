@@ -113,10 +113,6 @@ export function GiftRegistry({
       title="La mesa"
       className="bg-white/45"
     >
-      <p className="reveal mb-8 max-w-2xl leading-8 text-charcoal/70">
-        Si quieren acompañarnos con un regalo, aquí pueden hacerlo de forma sencilla. Cada
-        aportación se suma con cariño a esta nueva etapa.
-      </p>
       <div className="reveal mb-8 rounded-[1.75rem] border border-charcoal/10 bg-ivory p-6 text-charcoal/75 shadow-soft">
         <p className="font-serif text-3xl leading-tight text-charcoal">
           ¡Hola! Nos hace mucha ilusión que quieras darnos un regalo.
