@@ -4,19 +4,24 @@ import "./globals.css";
 const title = "Diego & Lis | 12 de septiembre de 2026";
 const description =
   "Nos casamos en Coyoacán y queremos compartir este día con ustedes. Confirma tu asistencia, consulta la ubicación, dress code y nuestra mesa.";
+const siteUrl = "https://www.lisydiego.com";
+const socialImage = `${siteUrl}/images/portada-boda.png`;
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://www.lisydiego.com"),
+  metadataBase: new URL(siteUrl),
   title,
   description,
+  alternates: {
+    canonical: siteUrl
+  },
   openGraph: {
     title,
     description,
-    url: "https://www.lisydiego.com",
+    url: siteUrl,
     siteName: "Diego & Lis",
     images: [
       {
-        url: "/images/portada-boda.png",
+        url: socialImage,
         width: 1200,
         height: 630,
         alt: "Diego y Lis - Boda en Coyoacán"
@@ -29,7 +34,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title,
     description,
-    images: ["/images/portada-boda.png"]
+    images: [socialImage]
   }
 };
 
