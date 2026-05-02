@@ -1,14 +1,35 @@
 import type { Metadata } from "next";
 import "./globals.css";
 
+const title = "Diego & Lis | 12 de septiembre de 2026";
+const description =
+  "Nos casamos en Coyoacán y queremos compartir este día con ustedes. Confirma tu asistencia, consulta la ubicación, dress code y nuestra mesa.";
+
 export const metadata: Metadata = {
-  title: "Diego & Lis | Boda",
-  description: "Landing de boda, RSVP y mesa de regalos de Diego & Lis.",
-  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000"),
+  metadataBase: new URL("https://www.lisydiego.com"),
+  title,
+  description,
   openGraph: {
-    title: "Diego & Lis",
-    description: "Nos casamos. Confirma tu asistencia y acompáñanos en esta nueva etapa.",
+    title,
+    description,
+    url: "https://www.lisydiego.com",
+    siteName: "Diego & Lis",
+    images: [
+      {
+        url: "/images/portada-boda.png",
+        width: 1200,
+        height: 630,
+        alt: "Diego y Lis - Boda en Coyoacán"
+      }
+    ],
+    locale: "es_MX",
     type: "website"
+  },
+  twitter: {
+    card: "summary_large_image",
+    title,
+    description,
+    images: ["/images/portada-boda.png"]
   }
 };
 
