@@ -71,6 +71,7 @@ export function GiftRegistry({
     return registryGifts.filter((gift) => gift.gift_categories?.slug === category);
   }, [category, registryGifts]);
   const selectedIsOpenAmount = selected ? isOpenAmountGift(selected) : false;
+  const selectedImageUrl = selected ? resolveImageUrl(selected.image_url) : null;
 
   async function checkout(formData: FormData) {
     if (!selected) return;
@@ -248,69 +249,88 @@ export function GiftRegistry({
         >
           <form
             action={checkout}
-            className="w-full max-w-xl rounded-[2rem] bg-ivory p-6 shadow-soft"
+            className="max-h-[92vh] w-full max-w-5xl overflow-y-auto rounded-[2rem] bg-ivory p-5 shadow-soft sm:p-6"
             onClick={(event) => event.stopPropagation()}
           >
-            <div className="flex items-start justify-between gap-4">
-              <div>
-                <p className="text-xs font-semibold uppercase tracking-[0.24em] text-sage">
-                  Regalar
-                </p>
-                <h3 className="mt-2 font-serif text-5xl leading-none text-charcoal">
-                  {selected.name}
-                </h3>
+            <div className="grid gap-6 lg:grid-cols-[0.92fr_1.08fr] lg:items-start">
+              <div className="order-2 flex min-h-72 rounded-[1.5rem] bg-gradient-to-br from-sage/15 via-white to-lavender/15 p-3 lg:order-1 lg:sticky lg:top-0 lg:h-full">
+                {selectedImageUrl ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img
+                    src={selectedImageUrl}
+                    alt={selected.name}
+                    className="max-h-[68vh] w-full rounded-[1.15rem] object-contain"
+                  />
+                ) : (
+                  <div className="flex min-h-72 w-full items-center justify-center rounded-[1.15rem] bg-white/50">
+                    <HeartHandshake className="text-lavender" size={48} />
+                  </div>
+                )}
               </div>
-              <Button
-                type="button"
-                variant="ghost"
-                className="h-11 min-h-11 w-11 px-0"
-                onClick={closeModal}
-              >
-                <X size={20} />
-              </Button>
+
+              <div className="order-1 lg:order-2">
+                <div className="flex items-start justify-between gap-4">
+                  <div>
+                    <p className="text-xs font-semibold uppercase tracking-[0.24em] text-sage">
+                      Regalar
+                    </p>
+                    <h3 className="mt-2 font-serif text-5xl leading-none text-charcoal">
+                      {selected.name}
+                    </h3>
+                  </div>
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    className="h-11 min-h-11 w-11 px-0"
+                    onClick={closeModal}
+                  >
+                    <X size={20} />
+                  </Button>
+                </div>
+                <div className="mt-6 grid gap-4">
+                  <label className="grid gap-2 text-sm font-semibold">
+                    Tu nombre
+                    <input name="contributor_name" required className="min-h-12 rounded-2xl border border-charcoal/15 bg-white px-4 outline-none focus:border-sage" />
+                  </label>
+                  <label className="grid gap-2 text-sm font-semibold">
+                    Tu email
+                    <input name="contributor_email" type="email" required className="min-h-12 rounded-2xl border border-charcoal/15 bg-white px-4 outline-none focus:border-sage" />
+                  </label>
+                  <label className="grid gap-2 text-sm font-semibold">
+                    Monto en MXN
+                    <input
+                      name="amount"
+                      type="number"
+                      min="50"
+                      step="10"
+                      defaultValue={
+                        selectedIsOpenAmount
+                          ? 500
+                          : Math.min(
+                              Math.max(500, (selected.target_amount - selected.contributed_amount) / 100),
+                              selected.target_amount / 100
+                            )
+                      }
+                      required
+                      className="min-h-12 rounded-2xl border border-charcoal/15 bg-white px-4 outline-none focus:border-sage"
+                    />
+                  </label>
+                  <label className="grid gap-2 text-sm font-semibold">
+                    Mensaje personalizado
+                    <textarea name="message" rows={3} className="rounded-2xl border border-charcoal/15 bg-white p-4 outline-none focus:border-sage" />
+                  </label>
+                </div>
+                {error && <p className="mt-4 text-sm font-semibold text-lavender">{error}</p>}
+                {error && (
+                  <Button type="button" variant="secondary" className="mt-3 w-full" onClick={closeModal}>
+                    Volver a regalos
+                  </Button>
+                )}
+                <Button className="mt-6 w-full" disabled={loading}>
+                  {loading ? "Abriendo pago..." : "Continuar a pago"}
+                </Button>
+              </div>
             </div>
-            <div className="mt-6 grid gap-4">
-              <label className="grid gap-2 text-sm font-semibold">
-                Tu nombre
-                <input name="contributor_name" required className="min-h-12 rounded-2xl border border-charcoal/15 bg-white px-4 outline-none focus:border-sage" />
-              </label>
-              <label className="grid gap-2 text-sm font-semibold">
-                Tu email
-                <input name="contributor_email" type="email" required className="min-h-12 rounded-2xl border border-charcoal/15 bg-white px-4 outline-none focus:border-sage" />
-              </label>
-              <label className="grid gap-2 text-sm font-semibold">
-                Monto en MXN
-                <input
-                  name="amount"
-                  type="number"
-                  min="50"
-                  step="10"
-                  defaultValue={
-                    selectedIsOpenAmount
-                      ? 500
-                      : Math.min(
-                          Math.max(500, (selected.target_amount - selected.contributed_amount) / 100),
-                          selected.target_amount / 100
-                        )
-                  }
-                  required
-                  className="min-h-12 rounded-2xl border border-charcoal/15 bg-white px-4 outline-none focus:border-sage"
-                />
-              </label>
-              <label className="grid gap-2 text-sm font-semibold">
-                Mensaje personalizado
-                <textarea name="message" rows={3} className="rounded-2xl border border-charcoal/15 bg-white p-4 outline-none focus:border-sage" />
-              </label>
-            </div>
-            {error && <p className="mt-4 text-sm font-semibold text-lavender">{error}</p>}
-            {error && (
-              <Button type="button" variant="secondary" className="mt-3 w-full" onClick={closeModal}>
-                Volver a regalos
-              </Button>
-            )}
-            <Button className="mt-6 w-full" disabled={loading}>
-              {loading ? "Abriendo pago..." : "Continuar a pago"}
-            </Button>
           </form>
         </div>
       )}
