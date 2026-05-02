@@ -1,5 +1,6 @@
 import { CalendarDays, MapPin } from "lucide-react";
 import Image from "next/image";
+import { Countdown } from "@/components/Countdown";
 import { ButtonLink } from "@/components/ui/Button";
 import { wedding } from "@/lib/wedding";
 
@@ -47,6 +48,7 @@ export function Hero() {
                   La mesa
                 </ButtonLink>
               </div>
+              <Countdown />
             </div>
           </div>
         </div>
