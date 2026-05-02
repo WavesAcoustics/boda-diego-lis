@@ -9,6 +9,7 @@ import { Nav } from "@/components/Nav";
 import { RSVPForm } from "@/components/RSVPForm";
 import { ScrollReveal } from "@/components/ScrollReveal";
 import { Timeline } from "@/components/Timeline";
+import { WeddingMusic } from "@/components/WeddingMusic";
 import { demoCategories, demoGifts } from "@/lib/demo-data";
 import { getMissingSupabasePublicEnv } from "@/lib/env";
 import { createClient } from "@/lib/supabase/server";
@@ -55,6 +56,7 @@ export default async function Home() {
   return (
     <main>
       <ConfigNotice message={warning} />
+      <WeddingMusic />
       <ScrollReveal />
       <Nav />
       <Hero />
