@@ -35,6 +35,7 @@ export function GiftRegistry({
 }) {
   const [category, setCategory] = useState("todos");
   const [selected, setSelected] = useState<GiftWithCategory | null>(null);
+  const [previewImage, setPreviewImage] = useState<{ src: string; alt: string } | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const closeModal = useCallback(() => {
@@ -42,7 +43,11 @@ export function GiftRegistry({
     setLoading(false);
     setError("");
   }, []);
+  const closeImagePreview = useCallback(() => {
+    setPreviewImage(null);
+  }, []);
   useModal(Boolean(selected), closeModal);
+  useModal(Boolean(previewImage), closeImagePreview);
 
   const registryGifts = useMemo(
     () =>
@@ -140,13 +145,22 @@ export function GiftRegistry({
               key={gift.id}
               className="reveal flex min-h-[360px] flex-col rounded-[1.75rem] border border-charcoal/10 bg-ivory p-5 shadow-soft"
             >
-              <div className="mb-5 flex h-36 overflow-hidden rounded-[1.25rem] bg-gradient-to-br from-sage/25 via-white to-lavender/25">
+              <button
+                type="button"
+                className={`mb-5 flex h-44 overflow-hidden rounded-[1.25rem] bg-gradient-to-br from-sage/15 via-white to-lavender/15 ${
+                  imageUrl ? "cursor-zoom-in" : "cursor-default"
+                }`}
+                onClick={() => {
+                  if (imageUrl) setPreviewImage({ src: imageUrl, alt: gift.name });
+                }}
+                aria-label={imageUrl ? `Ver imagen de ${gift.name}` : undefined}
+              >
                 {imageUrl ? (
                   // eslint-disable-next-line @next/next/no-img-element
                   <img
                     src={imageUrl}
                     alt={gift.name}
-                    className="h-full w-full object-cover"
+                    className="h-full w-full object-contain p-2"
                     loading="lazy"
                   />
                 ) : (
@@ -158,7 +172,7 @@ export function GiftRegistry({
                     )}
                   </div>
                 )}
-              </div>
+              </button>
               <p className="text-xs font-semibold uppercase tracking-[0.22em] text-sage">
                 {gift.gift_categories?.name}
               </p>
@@ -199,6 +213,33 @@ export function GiftRegistry({
           );
         })}
       </div>
+
+      {previewImage && (
+        <div
+          className="fixed inset-0 z-50 grid place-items-center bg-charcoal/70 p-4"
+          onClick={closeImagePreview}
+        >
+          <div
+            className="relative w-full max-w-5xl rounded-[2rem] bg-ivory p-3 shadow-soft sm:p-4"
+            onClick={(event) => event.stopPropagation()}
+          >
+            <Button
+              type="button"
+              variant="ghost"
+              className="absolute right-4 top-4 z-10 h-11 min-h-11 w-11 bg-ivory/90 px-0 shadow-soft"
+              onClick={closeImagePreview}
+            >
+              <X size={20} />
+            </Button>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={previewImage.src}
+              alt={previewImage.alt}
+              className="max-h-[82vh] w-full rounded-[1.5rem] object-contain"
+            />
+          </div>
+        </div>
+      )}
 
       {selected && (
         <div
