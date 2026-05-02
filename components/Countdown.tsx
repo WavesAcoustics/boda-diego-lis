@@ -63,7 +63,7 @@ export function Countdown() {
   ];
 
   return (
-    <div className="mt-10 w-full max-w-3xl rounded-[2rem] border border-white/35 bg-charcoal/55 p-5 text-ivory shadow-soft backdrop-blur-md sm:p-6">
+    <div className="w-full max-w-3xl rounded-[2rem] border border-white/35 bg-charcoal/55 p-5 text-ivory shadow-soft backdrop-blur-md sm:p-6">
       <p className="text-xs font-semibold uppercase tracking-[0.3em] text-white/85 sm:text-sm">
         Faltan para la boda
       </p>

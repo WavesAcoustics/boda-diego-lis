@@ -48,9 +48,14 @@ export function Hero() {
                   La mesa
                 </ButtonLink>
               </div>
-              <Countdown />
             </div>
           </div>
+        </div>
+      </section>
+
+      <section className="px-5 py-10 sm:px-8 lg:px-12">
+        <div className="reveal mx-auto max-w-3xl">
+          <Countdown />
         </div>
       </section>
 
