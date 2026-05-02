@@ -5,7 +5,7 @@ const title = "Diego & Lis | 12 de septiembre de 2026";
 const description =
   "Nos casamos en Coyoacán y queremos compartir este día con ustedes. Confirma tu asistencia, consulta la ubicación, dress code y nuestra mesa.";
 const siteUrl = "https://www.lisydiego.com";
-const socialImage = `${siteUrl}/images/portada-boda.png`;
+const socialImage = `${siteUrl}/images/og-boda-lis-diego.jpg`;
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
