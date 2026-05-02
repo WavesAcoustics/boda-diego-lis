@@ -1,9 +1,12 @@
 .next
 node_modules
 .env
-.env.local
+.env.*
+!.env.example
 .vercel
 dist
 coverage
 *.log
 .DS_Store
+tsconfig.tsbuildinfo
+Public/

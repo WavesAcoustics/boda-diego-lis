@@ -34,13 +34,14 @@ Copia `.env.example` a `.env.local`:
 ```bash
 NEXT_PUBLIC_SITE_URL=http://localhost:3000
 NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
-NEXT_PUBLIC_SUPABASE_ANON_KEY=your_anon_key
-SUPABASE_SERVICE_ROLE_KEY=your_service_role_key
-MERCADOPAGO_ACCESS_TOKEN=APP_USR_or_TEST_access_token
-MERCADOPAGO_WEBHOOK_SECRET=optional_shared_secret
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
+SUPABASE_SERVICE_ROLE_KEY=your_supabase_service_role_key
+MERCADOPAGO_ACCESS_TOKEN=your_mercadopago_access_token
+MERCADOPAGO_WEBHOOK_SECRET=optional_webhook_secret
 ```
 
 Nunca expongas `SUPABASE_SERVICE_ROLE_KEY` ni `MERCADOPAGO_ACCESS_TOKEN` en el cliente.
+No subas `.env.local` a GitHub; ya está protegido en `.gitignore`.
 
 Sin `.env.local`, el home muestra regalos demo y un aviso de configuración en desarrollo. RSVP, checkout, admin y webhooks necesitan variables reales.
 
@@ -66,7 +67,7 @@ El sitio público puede leer categorías y regalos activos. RSVP entra por API b
 1. Configura Supabase y ejecuta schema + seed.
 2. Reinicia `npm run dev`.
 3. Abre `http://localhost:3000/#rsvp`.
-4. Envía nombre, acompañantes y confirmación.
+4. Envía nombre y confirmación individual.
 5. Verifica la fila en `public.guests`.
 
 Si falla, la UI muestra el error real devuelto por Supabase o la variable faltante.
@@ -146,12 +147,41 @@ Los links cortos de Google Maps funcionan como botones externos. Para embeber ma
 
 ## Deploy en Vercel
 
-1. Sube el repo a GitHub.
-2. Importa el proyecto en Vercel.
-3. Agrega todas las variables de entorno.
-4. Verifica que `NEXT_PUBLIC_SITE_URL` sea el dominio final.
-5. En MercadoPago, actualiza la URL del webhook al dominio de Vercel.
-6. Ejecuta un pago de prueba y revisa `payment_events` en Supabase.
+1. Antes de subir, corre `npm run lint` y `npm run build`.
+2. Sube el repo a GitHub.
+3. Importa el proyecto en Vercel desde GitHub.
+4. En Vercel, agrega todas las variables de entorno de `.env.example`.
+5. Verifica que `NEXT_PUBLIC_SITE_URL` sea el dominio final, por ejemplo `https://tudominio.com`.
+6. En Supabase, confirma que el schema y los seeds estén aplicados.
+7. En MercadoPago, actualiza la URL del webhook al dominio de Vercel:
+
+```txt
+https://tu-dominio.com/api/webhooks/mercadopago
+```
+
+8. Haz redeploy en Vercel.
+9. Ejecuta un pago de prueba y revisa `payment_events` en Supabase.
+
+## GitHub
+
+No subas secretos. Antes del primer commit revisa que `.env.local` no aparezca en `git status`.
+
+Primer commit recomendado:
+
+```bash
+git init
+git add .
+git status
+git commit -m "Initial wedding landing"
+```
+
+Conectar con GitHub:
+
+```bash
+git branch -M main
+git remote add origin https://github.com/TU_USUARIO/TU_REPOSITORIO.git
+git push -u origin main
+```
 
 ## Dominio propio
 
