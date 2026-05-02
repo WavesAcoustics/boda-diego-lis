@@ -45,7 +45,7 @@ export async function POST(request: Request) {
     .eq("id", input.gift_id)
     .single();
 
-  if (giftError || !gift || !gift.is_active || gift.is_physical) {
+  if (giftError || !gift || !gift.is_active) {
     return NextResponse.json({ error: "Regalo no disponible." }, { status: 404 });
   }
 

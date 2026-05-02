@@ -23,7 +23,13 @@ function resolveImageUrl(url: string | null) {
 }
 
 function isOpenAmountGift(gift: GiftWithCategory) {
-  return gift.gift_categories?.slug === "surprise" || gift.name.toLowerCase().includes("sorpréndenos");
+  const name = gift.name.toLowerCase();
+  return (
+    gift.gift_categories?.slug === "surprise" ||
+    name.includes("sorpréndenos") ||
+    name.includes("fondo para nuestro primer hogar") ||
+    name.includes("fondo para detalles del primer hogar")
+  );
 }
 
 export function GiftRegistry({
@@ -111,6 +117,40 @@ export function GiftRegistry({
         Si quieren acompañarnos con un regalo, aquí pueden hacerlo de forma sencilla. Cada
         aportación se suma con cariño a esta nueva etapa.
       </p>
+      <div className="reveal mb-8 rounded-[1.75rem] border border-charcoal/10 bg-ivory p-6 text-charcoal/75 shadow-soft">
+        <p className="font-serif text-3xl leading-tight text-charcoal">
+          ¡Hola! Nos hace mucha ilusión que quieras darnos un regalo.
+        </p>
+        <div className="mt-4 grid gap-4 leading-8">
+          <p>
+            Gracias, permítenos contarte cómo pensamos manejarlo. Como nuestro hogar ya tiene lo
+            que necesitamos, preferimos recibir experiencias que podamos disfrutar y recordar para
+            siempre.
+          </p>
+          <p>
+            Por eso, hemos incluido ideas como actividades para nuestra luna de miel, ciertos
+            artículos para el hogar que siempre se agradecen, un apartado de donativos para
+            refugios de perritos y gatitos, y también un fondo “sorpresa”, donde puedes elegir
+            libremente qué te gustaría regalarnos.
+          </p>
+          <p>
+            Ojo: no es necesario cubrir el monto total que aparece en cada opción, ya que
+            representa el costo completo de la experiencia. Cualquier aportación es más que
+            bienvenida y todo se irá sumando.
+          </p>
+          <p>
+            Si tienes cualquier duda, con toda confianza pregúntanos. ¡Gracias por ser parte de
+            este momento tan especial!
+          </p>
+        </div>
+      </div>
+      <div className="reveal mb-8 rounded-[1.5rem] border border-sage/20 bg-ivory px-5 py-4 text-charcoal/75 shadow-soft">
+        <p className="font-semibold text-charcoal">Si prefieren hacer un depósito directo:</p>
+        <p className="mt-2 text-sm leading-7">
+          Hey Banco · CLABE{" "}
+          <span className="font-semibold tracking-[0.08em] text-sage">167580000027900054</span>
+        </p>
+      </div>
       <div className="mb-8 flex gap-2 overflow-x-auto pb-2">
         <button
           onClick={() => setCategory("todos")}
@@ -136,9 +176,7 @@ export function GiftRegistry({
       <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
         {filtered.map((gift) => {
           const openAmountGift = isOpenAmountGift(gift);
-          const progress = gift.is_physical
-            ? 0
-            : clampProgress(gift.contributed_amount, gift.target_amount);
+          const progress = clampProgress(gift.contributed_amount, gift.target_amount);
           const imageUrl = resolveImageUrl(gift.image_url);
 
           return (
@@ -179,17 +217,18 @@ export function GiftRegistry({
               </p>
               <h3 className="mt-2 font-serif text-4xl leading-none text-charcoal">{gift.name}</h3>
               <p className="mt-3 flex-1 leading-7 text-charcoal/70">{gift.description}</p>
-              {gift.is_physical ? (
-                <p className="mt-4 rounded-2xl bg-white px-4 py-3 text-sm text-charcoal/70">
-                  Puedes llevarlo físicamente el día de la boda.
-                </p>
-              ) : openAmountGift ? (
+              {openAmountGift ? (
                 <div className="mt-5 rounded-2xl bg-white px-4 py-3 text-sm text-charcoal/70">
                   <p className="font-semibold text-charcoal">Monto abierto</p>
                   <p>Tú eliges cuánto regalar. Aportado: {formatMoney(gift.contributed_amount)}</p>
                 </div>
               ) : (
                 <div className="mt-5">
+                  {gift.is_physical && (
+                    <p className="mb-2 text-xs font-semibold uppercase tracking-[0.18em] text-lavender">
+                      Regalo físico
+                    </p>
+                  )}
                   <div className="mb-2 flex justify-between text-sm">
                     <span>{formatMoney(gift.contributed_amount)}</span>
                     <span>{formatMoney(gift.target_amount)}</span>
@@ -206,9 +245,8 @@ export function GiftRegistry({
                   setLoading(false);
                   setSelected(gift);
                 }}
-                disabled={gift.is_physical}
               >
-                {gift.is_physical ? "Llevar juguete físico" : "Regalar"}
+                Regalar
               </Button>
             </article>
           );
