@@ -8,7 +8,6 @@ import { InfoSection } from "@/components/InfoSection";
 import { Nav } from "@/components/Nav";
 import { RSVPForm } from "@/components/RSVPForm";
 import { ScrollReveal } from "@/components/ScrollReveal";
-import { Story } from "@/components/Story";
 import { Timeline } from "@/components/Timeline";
 import { demoCategories, demoGifts } from "@/lib/demo-data";
 import { getMissingSupabasePublicEnv } from "@/lib/env";
@@ -65,7 +64,6 @@ export default async function Home() {
       <RSVPForm />
       <GiftRegistry categories={categories} gifts={gifts} />
       <DogDonation gifts={gifts} />
-      <Story />
       <Footer />
     </main>
   );
