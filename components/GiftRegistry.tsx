@@ -22,6 +22,10 @@ function resolveImageUrl(url: string | null) {
   return url;
 }
 
+function isOpenAmountGift(gift: GiftWithCategory) {
+  return gift.gift_categories?.slug === "surprise" || gift.name.toLowerCase().includes("sorpréndenos");
+}
+
 export function GiftRegistry({
   categories,
   gifts
@@ -61,6 +65,7 @@ export function GiftRegistry({
     if (category === "todos") return registryGifts;
     return registryGifts.filter((gift) => gift.gift_categories?.slug === category);
   }, [category, registryGifts]);
+  const selectedIsOpenAmount = selected ? isOpenAmountGift(selected) : false;
 
   async function checkout(formData: FormData) {
     if (!selected) return;
@@ -124,6 +129,7 @@ export function GiftRegistry({
 
       <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
         {filtered.map((gift) => {
+          const openAmountGift = isOpenAmountGift(gift);
           const progress = gift.is_physical
             ? 0
             : clampProgress(gift.contributed_amount, gift.target_amount);
@@ -162,6 +168,11 @@ export function GiftRegistry({
                 <p className="mt-4 rounded-2xl bg-white px-4 py-3 text-sm text-charcoal/70">
                   Puedes llevarlo físicamente el día de la boda.
                 </p>
+              ) : openAmountGift ? (
+                <div className="mt-5 rounded-2xl bg-white px-4 py-3 text-sm text-charcoal/70">
+                  <p className="font-semibold text-charcoal">Monto abierto</p>
+                  <p>Tú eliges cuánto regalar. Aportado: {formatMoney(gift.contributed_amount)}</p>
+                </div>
               ) : (
                 <div className="mt-5">
                   <div className="mb-2 flex justify-between text-sm">
@@ -233,10 +244,14 @@ export function GiftRegistry({
                   type="number"
                   min="50"
                   step="10"
-                  defaultValue={Math.min(
-                    Math.max(500, (selected.target_amount - selected.contributed_amount) / 100),
-                    selected.target_amount / 100
-                  )}
+                  defaultValue={
+                    selectedIsOpenAmount
+                      ? 500
+                      : Math.min(
+                          Math.max(500, (selected.target_amount - selected.contributed_amount) / 100),
+                          selected.target_amount / 100
+                        )
+                  }
                   required
                   className="min-h-12 rounded-2xl border border-charcoal/15 bg-white px-4 outline-none focus:border-sage"
                 />

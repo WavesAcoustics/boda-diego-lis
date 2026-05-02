@@ -1,42 +1,49 @@
 insert into public.gift_categories (slug, name, description, sort_order) values
-  ('luna-de-miel', 'Luna de miel', 'Experiencias para comenzar esta nueva etapa con calma, belleza y memoria.', 1),
-  ('casa', 'Mudanza / casa', 'Detalles útiles para nuestro primer hogar compartido.', 2),
-  ('fondo-libre', 'Fondo libre', 'Una aportación flexible para lo que venga después de la boda.', 3),
-  ('perritos', 'Donativo a perritos', 'Ayuda para apoyar refugios y rescates locales.', 4),
-  ('juguetes', 'Juguetes físicos para donar', 'Ideas de juguetes que puedes llevar el día de la boda.', 5)
-on conflict (slug) do nothing;
+  ('surprise', 'SORPRESA', 'Un espacio abierto para regalos creativos y mensajes personalizados.', 1),
+  ('honeymoon', 'Luna de miel', 'Regalos para vivir nuestro primer viaje como esposos en Peru.', 2),
+  ('experiences', 'Experiencias', 'Planes para seguir creando recuerdos juntos.', 3),
+  ('home', 'Casa', 'Detalles utiles para nuestro primer hogar.', 4),
+  ('perritos', 'Donativo a perritos', 'Ayuda para alimento, juguetes y cuidado de animales rescatados.', 5)
+on conflict (slug) do update set
+  name = excluded.name,
+  description = excluded.description,
+  sort_order = excluded.sort_order;
 
-insert into public.gifts (category_id, name, description, target_amount, contributed_amount, is_physical, sort_order)
-select id, 'Cena junto al mar', 'Una cena tranquila para celebrar los primeros días de casados.', 450000, 120000, false, 1
-from public.gift_categories where slug = 'luna-de-miel'
-on conflict do nothing;
-
-insert into public.gifts (category_id, name, description, target_amount, contributed_amount, is_physical, sort_order)
-select id, 'Hospedaje boutique', 'Una noche extra en un hotel pequeño, bonito y lleno de calma.', 680000, 240000, false, 2
-from public.gift_categories where slug = 'luna-de-miel'
-on conflict do nothing;
-
-insert into public.gifts (category_id, name, description, target_amount, contributed_amount, is_physical, sort_order)
-select id, 'Cafetera de casa', 'Para hacer más suaves las mañanas de nuestra vida diaria.', 320000, 160000, false, 1
-from public.gift_categories where slug = 'casa'
-on conflict do nothing;
-
-insert into public.gifts (category_id, name, description, target_amount, contributed_amount, is_physical, sort_order)
-select id, 'Vajilla para dos y visitas', 'Una mesa sencilla, linda y lista para recibir a quienes queremos.', 520000, 80000, false, 2
-from public.gift_categories where slug = 'casa'
-on conflict do nothing;
-
-insert into public.gifts (category_id, name, description, target_amount, contributed_amount, is_physical, sort_order)
-select id, 'Fondo libre Diego & Lis', 'Para sumar a nuestra nueva etapa con total libertad.', 1000000, 210000, false, 1
-from public.gift_categories where slug = 'fondo-libre'
-on conflict do nothing;
-
-insert into public.gifts (category_id, name, description, target_amount, contributed_amount, is_physical, sort_order)
-select id, 'Croquetas y atención veterinaria', 'Un donativo destinado a alimento, vacunas y cuidados para perritos rescatados.', 800000, 180000, false, 1
-from public.gift_categories where slug = 'perritos'
-on conflict do nothing;
-
-insert into public.gifts (category_id, name, description, target_amount, contributed_amount, is_physical, sort_order)
-select id, 'Juguetes resistentes', 'Pelotas, mordederas o juguetes lavables para llevar el día de la boda.', 100, 0, true, 1
-from public.gift_categories where slug = 'juguetes'
-on conflict do nothing;
+insert into public.gifts (
+  category_id,
+  name,
+  description,
+  target_amount,
+  contributed_amount,
+  image_url,
+  is_active,
+  is_physical,
+  sort_order
+)
+select
+  categories.id,
+  gifts.name,
+  gifts.description,
+  gifts.target_amount_pesos * 100,
+  gifts.contributed_amount_pesos * 100,
+  gifts.image_url,
+  gifts.is_active,
+  gifts.is_physical,
+  gifts.sort_order
+from (
+  values
+    ('surprise', '¡Sorpréndenos!', 'Este es tu espacio para ponerte creativo. Nos encantan las sorpresas, así que déjate llevar... Si decides regalarnos algo desde aquí, cuéntanos en el mensaje en qué te gustaría que usemos ese dinero.', 250000, 0, '/images/gifts/mystery-box.jpg', true, false, 1),
+    ('honeymoon', 'Vuelos para la luna de miel', '¡Todos abordo! Acompáñanos en esta aventura que será nuestro primer viaje como esposos. Queremos ir a Perú para que Lis me presente a su abuela y primos que no podrán venir a la boda. Y me enseñe esa cultura. Lima, Ica, Nazca están en la lista.', 40000, 0, '/images/gifts/vuelos-luna-de-miel.jpg', true, false, 2),
+    ('honeymoon', 'Noches en Lima', 'Nos queremos quedar en Nhow, un hotel súper ecléctico que mezcla la modernidad con la cultura inca, como ejemplo: hay una llama con una llama encendida en su estómago.', 7000, 0, '/images/gifts/nhow-lima.jpg', true, false, 3),
+    ('honeymoon', 'Fondo para ceviche', '¡¿Cómo no??! Ustedes también lo harían.', 500, 0, '/images/gifts/ceviche-peruano.jpg', true, false, 4),
+    ('honeymoon', 'Fondo para museos', 'Se redujo la lista porque Lis tenía una gigante, tenemos dos obligatorios al que ir: MAC y MATE.', 500, 0, '/images/gifts/museo-larco.jpg', true, false, 5),
+    ('honeymoon', 'Fondo para Pisco Sour', 'Víctor Morris, un bartender, en su bar en Lima en 1916 experimentó con pisco y jugo de limón... inventando una bebida que Diego aún no prueba.', 500, 0, '/images/gifts/morris-bar.jpg', true, false, 6),
+    ('experiences', 'Escapada de fin de semana', 'Una mini pausa para salir de la rutina, conocer un lugar cercano y regalarnos tiempo juntos cuando la vida vuelva a tomar ritmo.', 2000, 0, '/images/gifts/escapada-fin-de-semana.jpg', true, false, 7),
+    ('experiences', 'Noche de concierto o teatro', 'Un regalo para salir, arreglarnos y vivir una noche cultural juntos. Más que un boleto, es una excusa para seguir creando recuerdos. Tipo en noviembre con A Perfect Circle.', 5000, 0, '/images/gifts/concierto-teatro.jpg', true, false, 8),
+    ('home', 'Ninja Thirsti', 'Algo que quizás no compraríamos por nuestra cuenta, pero sí apreciaríamos mucho, y podríamos organizar una cata de refrescos hechos en casa.', 4700, 0, '/images/gifts/ninja-thirsti.jpg', true, false, 9),
+    ('home', 'Lavavajillas Xpert Wash', 'Un regalo útil de verdad: menos tiempo lavando platos y más tiempo disfrutando.', 15000, 0, '/images/gifts/lavavajillas-xpert-wash.jpg', true, false, 10),
+    ('home', 'Shark Steam & Scrub S8201', 'Artillería pesada de la limpieza para pisos.', 6500, 0, '/images/gifts/shark-steam-scrub.jpg', true, false, 11),
+    ('home', 'Fondo para nuestro primer hogar', 'Aportación simbólica y práctica para armar poco a poco, un espacio propio. Muebles, detalles, útiles y decisiones inteligentes para empezar bien.', 4500, 0, '/images/gifts/primer-hogar.jpg', true, false, 12),
+    ('perritos', 'Donativo para animales callejeros', 'Aportación destinada a comida, juguetes y apoyo para 31 gatitos y señoras que rescatan perritos.', 15000, 0, null, true, false, 13)
+) as gifts(slug, name, description, target_amount_pesos, contributed_amount_pesos, image_url, is_active, is_physical, sort_order)
+join public.gift_categories categories on categories.slug = gifts.slug;
