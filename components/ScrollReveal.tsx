@@ -5,6 +5,11 @@ import { useEffect } from "react";
 export function ScrollReveal() {
   useEffect(() => {
     const items = Array.from(document.querySelectorAll<HTMLElement>(".reveal"));
+    if (!("IntersectionObserver" in window)) {
+      items.forEach((item) => item.classList.add("is-visible"));
+      return;
+    }
+
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {

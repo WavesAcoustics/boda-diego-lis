@@ -44,7 +44,7 @@ function getTimeLeft(now = new Date()): TimeLeft {
 }
 
 export function Countdown() {
-  const [timeLeft, setTimeLeft] = useState<TimeLeft>(() => getTimeLeft());
+  const [timeLeft, setTimeLeft] = useState<TimeLeft | null>(null);
 
   useEffect(() => {
     const update = () => setTimeLeft(getTimeLeft());
@@ -55,11 +55,11 @@ export function Countdown() {
   }, []);
 
   const units = [
-    { label: "meses", value: timeLeft.months },
-    { label: "días", value: timeLeft.days },
-    { label: "horas", value: timeLeft.hours },
-    { label: "minutos", value: timeLeft.minutes },
-    { label: "segundos", value: timeLeft.seconds }
+    { label: "meses", value: timeLeft?.months },
+    { label: "días", value: timeLeft?.days },
+    { label: "horas", value: timeLeft?.hours },
+    { label: "minutos", value: timeLeft?.minutes },
+    { label: "segundos", value: timeLeft?.seconds }
   ];
 
   return (
@@ -74,7 +74,7 @@ export function Countdown() {
             className="rounded-3xl border border-white/20 bg-white/10 px-3 py-5 text-center"
           >
             <span className="block font-serif text-5xl leading-none text-white drop-shadow-sm sm:text-6xl">
-              {unit.value}
+              {unit.value ?? "--"}
             </span>
             <span className="mt-3 block text-[0.65rem] font-semibold uppercase tracking-[0.18em] text-white/80">
               {unit.label}
