@@ -1,7 +1,7 @@
 import Image from "next/image";
 import { Section } from "@/components/ui/Section";
 
-const colors = ["#7C8F61", "#A57CA6", "#EFE6D8", "#F8F3EA", "#B5965B", "#252321"];
+const colors = ["#7C8F61", "#A57CA6", "#B5965B", "#252321"];
 
 export function DressCode() {
   return (
